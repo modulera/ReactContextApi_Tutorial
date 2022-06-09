@@ -1,26 +1,44 @@
-import { useAuth } from "../../contexts/AuthContext";
+import { useEffect, useState } from 'react'
+// import { useAuth } from "../../contexts/AuthContext";
 
 import { Button } from 'react-bootstrap';
 
-function Profile({ history }) {
-	const { user, logout } = useAuth();
-	console.log(user);
+import { fetchUsers } from "../../api";
 
-	const handleLogout = async () => {
-		logout(() => {
-			history.push("/");
-		});
+function Profile() {
+	// const { user } = useAuth();
+	// console.log(user);
+
+	const [users, setUsers] = useState();
+	const [isFetched, setIsFetched] = useState(false);
+
+	const fetchData = async () => {
+		console.log('isFetched', isFetched);
+		if (!isFetched) return;
+
+		const users = await fetchUsers();
+		console.log('users', users);
+
+		setUsers(users);
 	};
+
+	useEffect(fetchData, [isFetched]);
 
 	return (
 		<div>
 			<h3 fontSize="22">Profile</h3>
-			<code>{JSON.stringify(user)}</code>
+			{/* <code>{user ? JSON.stringify(user) : {}}</code> */}
 
 			<br />
 			<br />
-			<Button variant="danger" type="button" block onClick={handleLogout}>
-				Logout
+
+			<ul>
+				{users?.status === 'success' && users?.description.map((user, i) => {
+					return <li key={i}>{user.fullName}</li>
+				})}
+			</ul>
+			<Button variant="success" type="button" onClick={() => setIsFetched(true)}>
+				Get users {users?.status || (isFetched && '...')}
 			</Button>
 		</div>
 	);

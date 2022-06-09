@@ -58,3 +58,10 @@ export const fetchLogout = async () => {
 
 	return data;
 };
+
+export const fetchUsers = async () => {
+	const { data } = await axios.get(
+		`${API_URL}/users`
+	);
+	return data;
+};
