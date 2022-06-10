@@ -10,11 +10,11 @@ function Profile() {
 	// console.log(user);
 
 	const [users, setUsers] = useState();
-	const [isFetched, setIsFetched] = useState(false);
+	const [fetching, setFetching] = useState(false);
 
 	const fetchData = async () => {
-		console.log('isFetched', isFetched);
-		if (!isFetched) return;
+		console.log('fetching', fetching);
+		if (!fetching) return;
 
 		const users = await fetchUsers();
 		console.log('users', users);
@@ -22,7 +22,7 @@ function Profile() {
 		setUsers(users);
 	};
 
-	useEffect(fetchData, [isFetched]);
+	useEffect(fetchData, [fetching]);
 
 	return (
 		<div>
@@ -37,8 +37,8 @@ function Profile() {
 					return <li key={i}>{user.fullName}</li>
 				})}
 			</ul>
-			<Button variant="success" type="button" onClick={() => setIsFetched(true)}>
-				Get users {users?.status || (isFetched && '...')}
+			<Button variant="success" type="button" onClick={() => setFetching(true)}>
+				Get users {users?.status || (fetching && '...')}
 			</Button>
 		</div>
 	);
